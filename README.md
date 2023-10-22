@@ -50,3 +50,14 @@ Please make sure to authenticate your requests using the appropriate authenticat
 ## API LINK
 
 jvec-backend-solution.onrender.com
+
+## Dependies
+
+- pip==23.3.1
+- Django
+- djangorestframework==3.14.0
+- djangorestframework_simplejwt==5.3.0
+- drf_yasg==1.21.7
+- email_validator==2.0.0.post2
+- gunicorn
+
