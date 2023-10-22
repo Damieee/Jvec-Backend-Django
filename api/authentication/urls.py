@@ -1,6 +1,5 @@
 from django.urls import path
 from .views import UserRegistration, UserLogin, UserLogout
-from django.views.decorators.csrf import csrf_exempt  # Import csrf_exempt
 
 
 urlpatterns = [
