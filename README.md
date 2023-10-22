@@ -49,4 +49,4 @@ Please make sure to authenticate your requests using the appropriate authenticat
 
 ## API LINK
 
-https://glidee-api.onrender.com
+jvec-backend-solution.onrender.com
