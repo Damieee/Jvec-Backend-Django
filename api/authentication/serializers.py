@@ -8,12 +8,10 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MyCustomUser
-        fields = ['first_name', 'last_name', 'email', 'password', 'confirm_password']
+        fields = ['first_name', 'username', 'last_name', 'email', 'password', 'confirm_password']
 
     def validate_email(self, value):
-        """
-        Validate the email field for a valid format and uniqueness.
-        """
+        # Validate email field
         if not value:
             raise serializers.ValidationError("Email is required.")
         try:
@@ -26,18 +24,21 @@ class UserSerializer(serializers.ModelSerializer):
         return value
 
     def validate_password(self, value):
-        """
-        Validate the password field for your specific criteria.
-        """
-        # You can add custom password validation logic here.
+        # Validate password field
         if len(value) < 8:
             raise serializers.ValidationError("Password must be at least 8 characters long.")
         return value
 
     def validate(self, data):
-        """
-        Additional validation for the serializer, e.g., confirm_password.
-        """
+        # Additional validation, e.g., confirm_password
         if data.get('password') != data.get('confirm_password'):
             raise serializers.ValidationError("Passwords do not match.")
         return data
+
+    def create(self, validated_data):
+        # Hash the password before saving to the database
+        password = validated_data.pop('password')
+        user = MyCustomUser(**validated_data)
+        user.set_password(password)
+        user.save()
+        return user

@@ -40,7 +40,16 @@ INSTALLED_APPS = [
     'rest_framework',
     'api.contacts',
     'api.authentication',
+    'drf_yasg',
 ]
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'basic': {
+            'type': 'basic'
+        }
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
