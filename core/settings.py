@@ -25,7 +25,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'default_value')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['jvec-backend-solution.onrender.com']
 
 
 # Application definition

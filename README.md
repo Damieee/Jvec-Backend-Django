@@ -47,9 +47,6 @@ This backend application provides various API endpoints for different functional
 
 Please make sure to authenticate your requests using the appropriate authentication methods (e.g., JWT token-based authentication) when accessing protected endpoints.
 
-## License
+## API LINK
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-Thank you for using the jvec-assessment-backend! We hope it helps you build amazing applications.
-</div>
+https://glidee-api.onrender.com
