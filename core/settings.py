@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'api.contacts',
     'api.authentication',
     'drf_yasg',
+    'api',
 ]
 
 SWAGGER_SETTINGS = {
