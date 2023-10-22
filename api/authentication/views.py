@@ -3,6 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views import View
 from django.db.utils import IntegrityError
 from django.contrib.auth import authenticate, login, logout
+from .serializers import UserSerializer
 from .models import MyCustomUser
 import json
 
@@ -28,12 +29,15 @@ class UserLogin(View):
     @csrf_exempt
     def post(self, request):
         data = json.loads(request.body)
-        user = authenticate(request, email=data['email'], password=data['password'])
-        if user is not None:
-            login(request, user)
-            return JsonResponse({'message': 'User logged in successfully.'}, status=200)
-        else:
-            return JsonResponse({'message': 'Invalid login credentials.'}, status=400)
+        serializer = UserSerializer(data=data)
+        if serializer.is_valid():
+            user = authenticate(request, email=data['email'], password=data['password'])
+            if user is not None:
+                login(request, user)
+                serializer = UserSerializer(user)
+                return JsonResponse(serializer.data, status=200)
+            else:
+                return JsonResponse({'message': 'Invalid login credentials.'}, status=400)
 
 class UserLogout(View):
     @csrf_exempt
