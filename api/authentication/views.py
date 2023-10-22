@@ -11,33 +11,33 @@ class UserRegistration(View):
     @csrf_exempt
     def post(self, request):
         data = json.loads(request.body)
-        if data['password'] != data['password_confirm']:
-            return JsonResponse({'message': 'The passwords do not match.'}, status=400)
-        user = MyCustomUser(
-            first_name=data['first_name'],
-            last_name=data['last_name'],
-            email=data['email']
-        )
-        user.set_password(data['password'])
-        try:
-            user.save()
-        except IntegrityError:
-            return JsonResponse({'message': 'User with email already exists.'}, status=400)
-        return JsonResponse({'message': 'User registered successfully.'}, status=201)
+        serializer = UserSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse({'message': 'User registered successfully.'}, status=201)
+        return JsonResponse(serializer.errors, status=400)
 
 class UserLogin(View):
     @csrf_exempt
     def post(self, request):
-        data = json.loads(request.body)
-        serializer = UserSerializer(data=data)
-        if serializer.is_valid():
-            user = authenticate(request, email=data['email'], password=data['password'])
-            if user is not None:
+        data = json.loads(request.body) 
+        # Try to find a user with the given email
+        user = MyCustomUser.objects.filter(email=data['email']).first()
+
+        if user:
+            # Check if the provided password matches the user's password
+            if user.check_password(data['password']):
                 login(request, user)
-                serializer = UserSerializer(user)
-                return JsonResponse(serializer.data, status=200)
-            else:
-                return JsonResponse({'message': 'Invalid login credentials.'}, status=400)
+
+                try:
+                    auth_token = user.generate_auth_token()
+                except Exception:
+                    return JsonResponse({'message': 'Error occured.'}), 500
+
+                return JsonResponse({'message': 'User logged in Successfully.', 'data': {'token': auth_token}}, status=200)
+        
+        return JsonResponse({'message': 'Invalid login credentials.'}, status=400)
+
 
 class UserLogout(View):
     @csrf_exempt

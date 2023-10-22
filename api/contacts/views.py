@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Contact
+from ..authentication.models import MyCustomUser
 from rest_framework.permissions import IsAuthenticated
 from .serializers import ContactSerializer
 from django.views import View
@@ -12,17 +13,29 @@ class CreateContact(View):
     @csrf_exempt
     @permission_classes([IsAuthenticated])
     def post(self, request):
-        serializer = ContactSerializer(data = json.loads(request.body))
-        if serializer.is_valid():
-            serializer.save(user=request.user)
-            return JsonResponse({'message': 'Contact created successfully.'}, status=201)
-        return JsonResponse(serializer.errors, status=400)
+        # Ensure that the user is authenticated and a MyCustomUser instance
+        if isinstance(request.user, MyCustomUser):
+            # Get user instance from the authenticated user
+            user = request.user
+
+            # Create the contact with the user
+            serializer = ContactSerializer(data=json.loads(request.body))
+            if serializer.is_valid():
+                # Assign the user to the contact before saving
+                contact = serializer.save(user=user)
+                return JsonResponse({'message': 'Contact created successfully.'}, status=201)
+            return JsonResponse(serializer.errors, status=400)
+        else:
+            # Handle the case where the user is not authenticated or not a MyCustomUser instance
+            return JsonResponse({'message': 'User not authenticated or not a valid user.'}, status=401)
+
 
 class ListContact(View):
     @csrf_exempt
     @permission_classes([IsAuthenticated])
     def get(self, request):
         contacts = Contact.objects.filter(data = json.loads(request.body))
+        
         serialized_contacts = [
             {
                 'id': contact.id,
