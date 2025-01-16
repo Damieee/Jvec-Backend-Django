@@ -30,6 +30,7 @@
 
 Your application should now be running at [http://localhost:8000/](http://localhost:8000/).
 
+
 ## API Endpoints
 
 This backend application provides various API endpoints for different functionalities. Below are some of the primary endpoints:
