@@ -60,4 +60,3 @@ jvec-backend-solution.onrender.com
 - drf_yasg==1.21.7
 - email_validator==2.0.0.post2
 - gunicorn
-
